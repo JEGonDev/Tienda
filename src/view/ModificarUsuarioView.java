@@ -21,6 +21,7 @@ public class ModificarUsuarioView extends JFrame {
     public JButton btnActualizarUsuario;
     public JButton btnVolver;
     public JLabel lblTitulo;
+    public JButton btnBuscarUsuarioID;
 
     public ModificarUsuarioView() {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -43,7 +44,7 @@ public class ModificarUsuarioView extends JFrame {
         contentPane.add(lblIdUsuario);
 
         textIdUsuario = new JTextField();
-        textIdUsuario.setBounds(10, 61, 369, 20);
+        textIdUsuario.setBounds(10, 61, 171, 20);
         contentPane.add(textIdUsuario);
         textIdUsuario.setColumns(10);
 
@@ -82,5 +83,9 @@ public class ModificarUsuarioView extends JFrame {
         btnVolver.setBackground(new Color(255, 128, 128));
         btnVolver.setBounds(10, 260, 171, 23);
         contentPane.add(btnVolver);
+        
+        btnBuscarUsuarioID = new JButton("BUSCAR");
+        btnBuscarUsuarioID.setBounds(233, 60, 108, 23);
+        contentPane.add(btnBuscarUsuarioID);
     }
 }

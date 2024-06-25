@@ -2,7 +2,6 @@ package controller;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import javax.swing.JOptionPane;
 import model.Categoria;
 import model.CategoriaDAO;
 import view.CrearCategoriaView;
@@ -12,101 +11,127 @@ import view.CategoriaView;
 
 public class CategoriaController implements ActionListener {
 
-    private CategoriaView categoriaView;
-    private CrearCategoriaView crearCategoriaView;
-    private ModificarCategoriaView modificarCategoriaView;
-    private CategoriaDAO categoriaDAO;
-    private InicioTiendaView inicio;
+    private CategoriaView vista;
+    private CrearCategoriaView crear;
+    private ModificarCategoriaView modificar;
+    private CategoriaDAO modelo;
+    private Categoria categoria = new Categoria();
+    private InicioTiendaView inicio = new InicioTiendaView();
 
     // Modificación para recibir inicio como parámetro
-    public CategoriaController(CategoriaView categoriaView, CategoriaDAO categoriaDAO, InicioTiendaView inicio) {
-        this.categoriaView = categoriaView;
-        this.categoriaDAO = categoriaDAO;
-        this.inicio = inicio;  // Asignar el objeto InicioTiendaView
+    public CategoriaController(CategoriaView vista, CrearCategoriaView crear, ModificarCategoriaView modificar, CategoriaDAO modelo, InicioTiendaView inicio) {
+        this.vista = vista;
+        this.crear = crear;
+        this.modificar = modificar;
+        this.modelo = modelo;
+        this.inicio = inicio;
+        
+        vista.setLocationRelativeTo(null);
+		vista.setResizable(false);
+		crear.setLocationRelativeTo(null);
+		crear.setResizable(false);
+		modificar.setLocationRelativeTo(null);
+		modificar.setResizable(false);
 
-        // Registro de los botones
-        this.categoriaView.btnMostrarCategorias.addActionListener(this);
-        this.categoriaView.btnCrearCategoria.addActionListener(this);
-        this.categoriaView.btnModificarCategoria.addActionListener(this);
-        this.categoriaView.btnEliminarCategoria.addActionListener(this);
-        this.categoriaView.btnVolverCategorias.addActionListener(this);
-    }
-
-    public void iniciar() {
-        categoriaView.setTitle("Gestión de Categorías");
-        categoriaView.setLocationRelativeTo(null);
-        categoriaView.setVisible(true);
+        // Asignar listeners a los botones de la vista principal
+        this.vista.btnModificarCategoria.addActionListener(this);
+        this.vista.btnCrearCategoria.addActionListener(this);
+        this.vista.btnEliminarCategoria.addActionListener(this);
+        this.vista.btnMostrarCategorias.addActionListener(this);
+        this.vista.btnVolverCategorias.addActionListener(this);
+        
+        // Asignar listeners a los botones de la vista de creación
+        this.crear.btnRegistrarCategoria.addActionListener(this);
+        this.crear.btnVolver.addActionListener(this);
+        
+        // Asignar listeners a los botones de la vista modificar
+        this.modificar.btnActualizarCategoria.addActionListener(this);
+        this.modificar.btnVolver.addActionListener(this);
+        this.modificar.btnBuscarIDCategoria.addActionListener(this);
     }
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        if (e.getSource() == categoriaView.btnMostrarCategorias) {
-            categoriaDAO.mostrarCategorias(categoriaView.model);
-        } else if (e.getSource() == categoriaView.btnCrearCategoria) {
-            abrirCrearCategoriaView();
-        } else if (e.getSource() == categoriaView.btnModificarCategoria) {
-            abrirModificarCategoriaView();
-        } else if (e.getSource() == categoriaView.btnEliminarCategoria) {
-            eliminarCategoria();
-        } else if (e.getSource() == categoriaView.btnVolverCategorias) {
-            categoriaView.setVisible(false);
-            if (inicio != null) {
-                inicio.setVisible(true);  // Mostrar la vista de inicio
-            } else {
-                System.err.println("InicioTiendaView es null. No se puede hacer visible.");
+        // Lógica de manejo de eventos
+    	
+    	//boton volver ventana principal
+    	if (e.getSource() == vista.btnVolverCategorias) {
+    		inicio.setVisible(true);
+    		vista.setVisible(false);
+    	}
+    	
+    	//Esto lo que hace es mostrar la tabla en el formulario
+    	if (e.getSource() == vista.btnMostrarCategorias) {
+    	    modelo.mostrarCategorias(vista.model); // Lee y actualiza la tabla    
+    	}
+
+    	//toma id del campo de texto y elimina segun ese id
+    	if (e.getSource() == vista.btnEliminarCategoria) {
+    	    int idCategoria = Integer.parseInt(vista.textCodigoEliminarCategoria.getText());
+    	    categoria.setIdCategoria(idCategoria);
+    	    modelo.eliminarCategoria(categoria);
+    	    vista.textCodigoEliminarCategoria.setText(""); 	        
+    	    } 
+    	
+        //Esto lo que hace es que al oprimir el boton crear libro se muestre el formulario en cuestion
+        if (e.getSource() == vista.btnCrearCategoria) {
+            crear.setVisible(true);
+            vista.dispose();
+        }
+        
+        if (e.getSource() == crear.btnVolver) {
+        	vista.setVisible(true);
+        	crear.setVisible(false);
+        }
+
+        //Esto permite que al oprimir el boton se guarden los datos suministrados
+        if (e.getSource() == crear.btnRegistrarCategoria) {
+            // Obtener valores de la ventana de creación
+            String nombre = crear.textNombreCategoria.getText();
+           
+            // Asignar valores al objeto libro
+            categoria.setNombre(nombre);
+            // Crear el libro en el modelo
+            modelo.crearCategoria(categoria);
+
+            crear.textNombreCategoria.setText("");
+        }
+
+        //Esto permite que al oprimir el boton se abra el formulario en cuestion
+        if (e.getSource() == vista.btnModificarCategoria) {
+        	modificar.setVisible(true);
+        	vista.dispose();
+        }
+        
+        if (e.getSource() == modificar.btnVolver) {
+        	vista.setVisible(true);
+        	modificar.setVisible(false);
+        }
+        
+        	//Esto trae el contenido del libro que el usuario propocione en los campos de texto
+            if (e.getSource() == modificar.btnBuscarIDCategoria) {
+               int id = Integer.parseInt(modificar.textCodigoCategoria.getText());
+                categoria.setIdCategoria(id);
+                modelo.traerContenidoCategoria(categoria);
+
+                // Asignar valores obtenidos al formulario de modificación
+                modificar.textCodigoCategoria.setText(String.valueOf(categoria.getIdCategoria()));
+                modificar.textNombreCategoria.setText(categoria.getNombre());
+      
+            }
+
+            //Esto guarda las modificaciones del usuario
+            if (e.getSource() == modificar.btnActualizarCategoria) {
+                // Obtener valores modificados del formulario
+                String nombre = modificar.textNombreCategoria.getText();
+                    // Actualizar la base de datos en el campo id
+                categoria.setNombre(nombre);
+               
+                // Guardar cambios en el modelo
+                modelo.modificarCategoria(categoria);
+
+                modificar.textNombreCategoria.setText("");
+                modificar.textCodigoCategoria.setText("");
             }
         }
     }
-
-    private void abrirCrearCategoriaView() {
-        crearCategoriaView = new CrearCategoriaView();
-        crearCategoriaView.btnRegistrarCategoria.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                Categoria categoria = new Categoria();
-                categoria.setNombre(crearCategoriaView.textNombreCategoria.getText());
-                categoriaDAO.crearCategoria(categoria);
-                crearCategoriaView.dispose();
-            }
-        });
-        crearCategoriaView.btnVolver.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                crearCategoriaView.dispose();
-            }
-        });
-        crearCategoriaView.setVisible(true);
-    }
-
-    private void abrirModificarCategoriaView() {
-        modificarCategoriaView = new ModificarCategoriaView();
-        modificarCategoriaView.btnActualizarCategoria.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                Categoria categoria = new Categoria();
-                categoria.setIdCategoria(Integer.parseInt(modificarCategoriaView.textCodigoCategoria.getText()));
-                categoria.setNombre(modificarCategoriaView.textNombreCategoria.getText());
-                categoriaDAO.modificarCategoria(categoria);
-                modificarCategoriaView.dispose();
-            }
-        });
-        modificarCategoriaView.btnVolver.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                modificarCategoriaView.dispose();
-            }
-        });
-        modificarCategoriaView.setVisible(true);
-    }
-
-    private void eliminarCategoria() {
-        try {
-            int id = Integer.parseInt(categoriaView.textCodigoEliminarCategoria.getText());
-            Categoria categoria = new Categoria();
-            categoria.setIdCategoria(id);
-            categoriaDAO.eliminarCategoria(categoria);
-        } catch (NumberFormatException e) {
-            JOptionPane.showMessageDialog(categoriaView, "Debes ingresar un número válido para el ID de la categoría.", "Error", JOptionPane.ERROR_MESSAGE);
-        }
-    }
-}

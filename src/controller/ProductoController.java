@@ -5,152 +5,131 @@ import java.awt.event.ActionListener;
 import javax.swing.JOptionPane;
 import model.Producto;
 import model.ProductoDAO;
+import model.UsuarioDAO;
 import view.CrearProductoView;
+import view.CrearUsuarioView;
 import view.InicioTiendaView;
 import view.ModificarProductoView;
+import view.ModificarUsuarioView;
 import view.ProductoView;
+import view.UsuarioView;
 
 public class ProductoController implements ActionListener {
 
-    private ProductoView productoView;
-    private CrearProductoView crearProductoView;
-    private ModificarProductoView modificarProductoView;
-    private ProductoDAO productoDAO;
+    private ProductoView vista;
+    private CrearProductoView crear;
+    private ModificarProductoView modificar;
+    private ProductoDAO modelo;
+    private Producto producto = new Producto();
+    private InicioTiendaView inicio = new InicioTiendaView();
 
     // Constructor
-    public ProductoController(ProductoView productoView, ProductoDAO productoDAO, InicioTiendaView inicio) {
-        this.productoView = productoView;
-        this.productoDAO = productoDAO;
+    public ProductoController(ProductoView vista, CrearProductoView crear, ModificarProductoView modificar,ProductoDAO modelo, InicioTiendaView inicio) {
+        this.vista = vista;
+        this.crear = crear;
+        this.modificar = modificar;
+        this.modelo = modelo;
+        this.inicio = inicio;
 
-        // Registrar ActionListener para los botones en ProductoView
-        this.productoView.btnMostrarProductos.addActionListener(this);
-        this.productoView.btnCrearProducto.addActionListener(this);
-        this.productoView.btnModificarProducto.addActionListener(this);
-        this.productoView.btnEliminarProducto.addActionListener(this);
-        this.productoView.btnVolverProductos.addActionListener(this);
-
-        // Inicializar y ocultar las vistas de creación y modificación de productos
-        this.crearProductoView = new CrearProductoView();
-        this.modificarProductoView = new ModificarProductoView();
-
-        // Registrar ActionListener para los botones en CrearProductoView
-        this.crearProductoView.btnRegistrarProducto.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                registrarProducto();
-            }
-        });
-        this.crearProductoView.btnVolver.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                crearProductoView.setVisible(false);
-            }
-        });
-
-        // Registrar ActionListener para los botones en ModificarProductoView
-        this.modificarProductoView.btnActualizarProducto.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                actualizarProducto();
-            }
-        });
-        this.modificarProductoView.btnVolver.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                modificarProductoView.setVisible(false);
-            }
-        });
-    }
-
-    // Iniciar la vista de productos
-    public void iniciar() {
-        productoView.setTitle("Gestión de Productos");
-        productoView.setLocationRelativeTo(null);
-        productoView.setVisible(true);
+        // Asignar listeners a los botones de la vista principal
+        this.vista.btnModificarCategoria.addActionListener(this);
+        this.vista.btnCrearCategoria.addActionListener(this);
+        this.vista.btnEliminarCategoria.addActionListener(this);
+        this.vista.btnMostrarCategorias.addActionListener(this);
+        this.vista.btnVolverCategorias.addActionListener(this);
+        
+        // Asignar listeners a los botones de la vista de creación
+        this.crear.btnRegistrarCategoria.addActionListener(this);
+        this.crear.btnVolver.addActionListener(this);
+        
+        // Asignar listeners a los botones de la vista modificar
+        this.modificar.btnActualizarCategoria.addActionListener(this);
+        this.modificar.btnVolver.addActionListener(this);
+        this.modificar.btnBuscarIDCategoria.addActionListener(this);
     }
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        if (e.getSource() == productoView.btnMostrarProductos) {
-            productoDAO.mostrarProductos(productoView.model);
-        } else if (e.getSource() == productoView.btnCrearProducto) {
-            abrirCrearProductoView();
-        } else if (e.getSource() == productoView.btnModificarProducto) {
-            abrirModificarProductoView();
-        } else if (e.getSource() == productoView.btnEliminarProducto) {
-            eliminarProducto();
-        } else if (e.getSource() == productoView.btnVolverProductos) {
-            productoView.setVisible(false);
-            // Aquí puedes manejar la acción de volver a otra vista o cerrar la aplicación.
+        // Lógica de manejo de eventos
+    	
+    	//boton volver ventana principal
+    	if (e.getSource() == vista.btnVolverCategorias) {
+    		inicio.setVisible(true);
+    		vista.setVisible(false);
+    	}
+    	
+    	//Esto lo que hace es mostrar la tabla en el formulario
+    	if (e.getSource() == vista.btnMostrarCategorias) {
+    	    modelo.mostrarCategorias(vista.model); // Lee y actualiza la tabla    
+    	}
+
+    	//toma id del campo de texto y elimina segun ese id
+    	if (e.getSource() == vista.btnEliminarCategoria) {
+    	    int idCategoria = Integer.parseInt(vista.textCodigoEliminarCategoria.getText());
+    	    categoria.setIdCategoria(idCategoria);
+    	    modelo.eliminarCategoria(categoria);
+    	    vista.textCodigoEliminarCategoria.setText(""); 	        
+    	    } 
+    	
+        //Esto lo que hace es que al oprimir el boton crear libro se muestre el formulario en cuestion
+        if (e.getSource() == vista.btnCrearCategoria) {
+            crear.setVisible(true);
+            vista.dispose();
         }
-    }
-
-    private void abrirCrearProductoView() {
-        crearProductoView.setLocationRelativeTo(productoView);
-        crearProductoView.setVisible(true);
-    }
-
-    private void abrirModificarProductoView() {
-        modificarProductoView.setLocationRelativeTo(productoView);
-        modificarProductoView.setVisible(true);
-    }
-
-    private void registrarProducto() {
-        try {
-            Producto producto = new Producto();
-            producto.setNombre(crearProductoView.textNombreProducto.getText());
-            producto.setIdCategoria(Integer.parseInt(crearProductoView.textIdCategoria.getText()));
-            producto.setCodigoBarras(crearProductoView.textCodigoBarras.getText());
-            producto.setPrecioVenta(Double.parseDouble(crearProductoView.textPrecioProducto.getText()));
-            producto.setCantidadStock(Integer.parseInt(crearProductoView.textCantidadProducto.getText()));
-
-            productoDAO.crearProducto(producto);
-            JOptionPane.showMessageDialog(crearProductoView, "Producto creado exitosamente.");
-            crearProductoView.setVisible(false);
-            productoDAO.mostrarProductos(productoView.model); // Actualizar la vista principal
-
-        } catch (NumberFormatException ex) {
-            JOptionPane.showMessageDialog(crearProductoView, "Por favor ingresa valores válidos.", "Error", JOptionPane.ERROR_MESSAGE);
-        } catch (Exception ex) {
-            JOptionPane.showMessageDialog(crearProductoView, "Error al crear el producto: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+        
+        if (e.getSource() == crear.btnVolver) {
+        	vista.setVisible(true);
+        	crear.setVisible(false);
         }
-    }
 
-    private void actualizarProducto() {
-        try {
-            Producto producto = new Producto();
-            producto.setIdProducto(Integer.parseInt(modificarProductoView.textCodigoProducto.getText()));
-            producto.setNombre(modificarProductoView.textNombreProducto.getText());
-            producto.setIdCategoria(Integer.parseInt(modificarProductoView.textIdCategoria.getText()));
-            producto.setCodigoBarras(modificarProductoView.textCodigoBarras.getText());
-            producto.setPrecioVenta(Double.parseDouble(modificarProductoView.textPrecioProducto.getText()));
-            producto.setCantidadStock(Integer.parseInt(modificarProductoView.textCantidadProducto.getText()));
+        //Esto permite que al oprimir el boton se guarden los datos suministrados
+        if (e.getSource() == crear.btnRegistrarCategoria) {
+            // Obtener valores de la ventana de creación
+            String nombre = crear.textNombreCategoria.getText();
+           
+            // Asignar valores al objeto libro
+            categoria.setNombre(nombre);
+            // Crear el libro en el modelo
+            modelo.crearCategoria(categoria);
 
-            productoDAO.modificarProducto(producto);
-            JOptionPane.showMessageDialog(modificarProductoView, "Producto modificado exitosamente.");
-            modificarProductoView.setVisible(false);
-            productoDAO.mostrarProductos(productoView.model); // Actualizar la vista principal
-
-        } catch (NumberFormatException ex) {
-            JOptionPane.showMessageDialog(modificarProductoView, "Por favor ingresa valores válidos.", "Error", JOptionPane.ERROR_MESSAGE);
-        } catch (Exception ex) {
-            JOptionPane.showMessageDialog(modificarProductoView, "Error al modificar el producto: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+            crear.textNombreCategoria.setText("");
         }
-    }
 
-    private void eliminarProducto() {
-        try {
-            int id = Integer.parseInt(productoView.textCodigoEliminarProducto.getText());
-            Producto producto = new Producto();
-            producto.setIdProducto(id);
-            productoDAO.eliminarProducto(producto);
-            JOptionPane.showMessageDialog(productoView, "Producto eliminado exitosamente.");
-            productoDAO.mostrarProductos(productoView.model); // Actualizar la vista principal
-
-        } catch (NumberFormatException ex) {
-            JOptionPane.showMessageDialog(productoView, "Debes ingresar un número válido para el ID del producto.", "Error", JOptionPane.ERROR_MESSAGE);
-        } catch (Exception ex) {
-            JOptionPane.showMessageDialog(productoView, "Error al eliminar el producto: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+        //Esto permite que al oprimir el boton se abra el formulario en cuestion
+        if (e.getSource() == vista.btnModificarCategoria) {
+        	modificar.setVisible(true);
+        	vista.dispose();
         }
-    }
+        
+        if (e.getSource() == modificar.btnVolver) {
+        	vista.setVisible(true);
+        	modificar.setVisible(false);
+        }
+        
+        	//Esto trae el contenido del libro que el usuario propocione en los campos de texto
+            if (e.getSource() == modificar.btnBuscarIDCategoria) {
+                int id = Integer.parseInt(modificar.textCodigoCategoria.getText());
+                categoria.setIdCategoria(id);
+                modelo.traerContenidoCategoria(categoria);
+
+                // Asignar valores obtenidos al formulario de modificación
+                modificar.textCodigoCategoria.setText(String.valueOf(categoria.getIdCategoria()));
+                modificar.textNombreCategoria.setText(categoria.getNombre());
+      
+            }
+
+            //Esto guarda las modificaciones del usuario
+            if (e.getSource() == modificar.btnActualizarCategoria) {
+                // Obtener valores modificados del formulario
+                String nombre = modificar.textNombreCategoria.getText();
+                    // Actualizar la base de datos en el campo id
+                categoria.setNombre(nombre);
+               
+                // Guardar cambios en el modelo
+                modelo.modificarCategoria(categoria);
+
+                modificar.textNombreCategoria.setText("");
+                modificar.textCodigoCategoria.setText("");
+            }
+        }
 }

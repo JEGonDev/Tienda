@@ -48,6 +48,7 @@ public class CategoriaView extends JFrame {
         contentPane.add(btnMostrarCategorias);
 
         btnCrearCategoria = new JButton("CREAR categoría");
+        btnCrearCategoria.setBackground(Color.WHITE);
         btnCrearCategoria.setBounds(10, 271, 271, 34);
         contentPane.add(btnCrearCategoria);
 

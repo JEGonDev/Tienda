@@ -19,6 +19,7 @@ public class ModificarCategoriaView extends JFrame {
     public JButton btnActualizarCategoria;
     public JButton btnVolver;
     public JLabel lblTitulo;
+    public JButton btnBuscarIDCategoria;
 
     public ModificarCategoriaView() {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -37,11 +38,11 @@ public class ModificarCategoriaView extends JFrame {
         contentPane.add(lblTitulo);
 
         JLabel lblCodigoCategoria = new JLabel("Código de la categoría a modificar:");
-        lblCodigoCategoria.setBounds(10, 36, 188, 14);
+        lblCodigoCategoria.setBounds(10, 36, 252, 14);
         contentPane.add(lblCodigoCategoria);
 
         textCodigoCategoria = new JTextField();
-        textCodigoCategoria.setBounds(10, 61, 369, 20);
+        textCodigoCategoria.setBounds(10, 61, 198, 20);
         contentPane.add(textCodigoCategoria);
         textCodigoCategoria.setColumns(10);
 
@@ -62,5 +63,9 @@ public class ModificarCategoriaView extends JFrame {
         btnVolver.setBackground(new Color(255, 128, 128));
         btnVolver.setBounds(10, 148, 171, 23);
         contentPane.add(btnVolver);
+        
+        btnBuscarIDCategoria = new JButton("BUSCAR");
+        btnBuscarIDCategoria.setBounds(252, 60, 103, 23);
+        contentPane.add(btnBuscarIDCategoria);
     }
 }

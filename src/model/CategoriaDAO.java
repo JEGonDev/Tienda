@@ -92,4 +92,29 @@ public class CategoriaDAO extends Conexion {
             closeConnection(conexion);
         }
     }
-}
+    
+    public void traerContenidoCategoria(Categoria categoria) {
+    	try {
+            this.conexion = getConnection();
+            String sql = "SELECT * FROM categorias WHERE idCategoria=?";
+            PreparedStatement sentencia = conexion.prepareStatement(sql);
+            sentencia.setInt(1, categoria.getIdCategoria());
+            ResultSet resultado = sentencia.executeQuery();
+
+            if (resultado.next()) {
+            	categoria.setIdCategoria(resultado.getInt("idCategoria"));
+            	categoria.setNombre(resultado.getString("nombre"));
+    
+            } else {
+                JOptionPane.showMessageDialog(null, "¡No existe un producto con ese ID!");
+            }
+
+            sentencia.close();
+            resultado.close();
+        } catch (SQLException e) {
+            JOptionPane.showMessageDialog(null, "Ha ocurrido un problema al intentar mostrar los productos: " + e.getMessage());
+        } finally {
+            closeConnection(conexion);
+        
+    }
+    }}

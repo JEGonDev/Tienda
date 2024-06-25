@@ -21,6 +21,7 @@ public class ModificarProductoView extends JFrame {
     public JTextField textCantidadProducto;
     public JButton btnActualizarProducto;
     public JButton btnVolver;
+    public JButton btnBuscarProductoID;
 
     public ModificarProductoView() {
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -41,7 +42,7 @@ public class ModificarProductoView extends JFrame {
         contentPane.add(lblCodigo);
 
         textCodigoProducto = new JTextField();
-        textCodigoProducto.setBounds(137, 50, 210, 20);
+        textCodigoProducto.setBounds(137, 50, 89, 20);
         contentPane.add(textCodigoProducto);
         textCodigoProducto.setColumns(10);
 
@@ -97,5 +98,9 @@ public class ModificarProductoView extends JFrame {
         btnVolver = new JButton("Volver");
         btnVolver.setBounds(10, 11, 89, 23);
         contentPane.add(btnVolver);
+        
+        btnBuscarProductoID = new JButton("BUSCAR");
+        btnBuscarProductoID.setBounds(294, 49, 104, 23);
+        contentPane.add(btnBuscarProductoID);
     }
 }

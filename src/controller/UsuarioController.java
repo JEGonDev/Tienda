@@ -2,8 +2,6 @@ package controller;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import javax.swing.JOptionPane;
-import javax.swing.table.DefaultTableModel;
 import model.Usuario;
 import model.UsuarioDAO;
 import view.CrearUsuarioView;
@@ -13,99 +11,135 @@ import view.UsuarioView;
 
 public class UsuarioController implements ActionListener {
 
-    private UsuarioView usuarioView;
-    private CrearUsuarioView crearUsuarioView;
-    private ModificarUsuarioView modificarUsuarioView;
-    private UsuarioDAO usuarioDAO;
-    private InicioTiendaView inicio;
+    private UsuarioView vista;
+    private CrearUsuarioView crear;
+    private ModificarUsuarioView modificar;
+    private UsuarioDAO modelo;
+    private Usuario usuario = new Usuario();
+    private InicioTiendaView inicio = new InicioTiendaView();
 
-    public UsuarioController(UsuarioView usuarioView, UsuarioDAO usuarioDAO, InicioTiendaView inicio) {
-        this.usuarioView = usuarioView;
-        this.usuarioDAO = usuarioDAO;
+    public UsuarioController(UsuarioView vista, CrearUsuarioView crear, ModificarUsuarioView modificar,UsuarioDAO modelo, InicioTiendaView inicio) {
+    	this.vista = vista;
+        this.crear = crear;
+        this.modificar = modificar;
+        this.modelo = modelo;
         this.inicio = inicio;
 
-        this.usuarioView.btnMostrarUsuarios.addActionListener(this);
-        this.usuarioView.btnCrearUsuario.addActionListener(this);
-        this.usuarioView.btnModificarUsuario.addActionListener(this);
-        this.usuarioView.btnEliminarUsuario.addActionListener(this);
-        this.usuarioView.btnVolverUsuarios.addActionListener(this);
-    }
-
-    public void iniciar() {
-        usuarioView.setTitle("Gestión de Usuarios");
-        usuarioView.setLocationRelativeTo(null);
-        usuarioView.setVisible(true);
+        vista.setLocationRelativeTo(null);
+		vista.setResizable(false);
+		crear.setLocationRelativeTo(null);
+		crear.setResizable(false);
+		modificar.setLocationRelativeTo(null);
+		modificar.setResizable(false);
+		
+		this.vista.btnCrearUsuario.addActionListener(this);
+		this.vista.btnEliminarUsuario.addActionListener(this);
+		this.vista.btnModificarUsuario.addActionListener(this);
+		this.vista.btnMostrarUsuarios.addActionListener(this);
+		this.vista.btnVolverUsuarios.addActionListener(this);
+		
+		this.crear.btnRegistrarUsuario.addActionListener(this);
+		this.crear.btnVolver.addActionListener(this);
+		
+		this.modificar.btnActualizarUsuario.addActionListener(this);
+		this.modificar.btnBuscarUsuarioID.addActionListener(this);
+		this.modificar.btnVolver.addActionListener(this);
     }
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        if (e.getSource() == usuarioView.btnMostrarUsuarios) {
-            usuarioDAO.mostrarUsuarios(usuarioView.model);
-        } else if (e.getSource() == usuarioView.btnCrearUsuario) {
-            abrirCrearUsuarioView();
-        } else if (e.getSource() == usuarioView.btnModificarUsuario) {
-            abrirModificarUsuarioView();
-        } else if (e.getSource() == usuarioView.btnEliminarUsuario) {
-            eliminarUsuario();
-        } else if (e.getSource() == usuarioView.btnVolverUsuarios) {
-            usuarioView.setVisible(false);
-            inicio.setVisible(true); // Mostrar la vista de inicio
+        // Lógica de manejo de eventos
+    	
+    	//boton volver ventana principal
+    	if (e.getSource() == vista.btnVolverUsuarios) {
+    		inicio.setVisible(true);
+    		vista.setVisible(false);
+    	}
+    	
+    	//Esto lo que hace es mostrar la tabla en el formulario
+    	if (e.getSource() == vista.btnMostrarUsuarios) {
+    	    modelo.mostrarUsuarios(vista.model); // Lee y actualiza la tabla    
+    	}
+
+    	//toma id del campo de texto y elimina segun ese id
+    	if (e.getSource() == vista.btnEliminarUsuario) {
+    	    int idUsuario = Integer.parseInt(vista.textCodigoEliminarUsuario.getText());
+    	    usuario.setIdCliente(idUsuario);
+    	    modelo.eliminarUsuario(usuario);
+    	    vista.textCodigoEliminarUsuario.setText(""); 	        
+    	    } 
+    	
+        //Esto lo que hace es que al oprimir el boton crear libro se muestre el formulario en cuestion
+        if (e.getSource() == vista.btnCrearUsuario) {
+            crear.setVisible(true);
+            vista.dispose();
         }
-    }
-
-    private void abrirCrearUsuarioView() {
-        crearUsuarioView = new CrearUsuarioView();
-        crearUsuarioView.btnRegistrarUsuario.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                Usuario usuario = new Usuario();
-                usuario.setNombre(crearUsuarioView.textNombreUsuario.getText());
-                usuario.setEmail(crearUsuarioView.textEmailUsuario.getText());
-                usuario.setTelefono(crearUsuarioView.textTelefonoUsuario.getText());
-                usuarioDAO.crearUsuario(usuario);
-                crearUsuarioView.dispose();
-            }
-        });
-        crearUsuarioView.btnVolver.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                crearUsuarioView.dispose();
-            }
-        });
-        crearUsuarioView.setVisible(true);
-    }
-
-    private void abrirModificarUsuarioView() {
-        modificarUsuarioView = new ModificarUsuarioView();
-        modificarUsuarioView.btnActualizarUsuario.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                Usuario usuario = new Usuario();
-                usuario.setIdCliente(Integer.parseInt(modificarUsuarioView.textIdUsuario.getText()));
-                usuario.setNombre(modificarUsuarioView.textNombreUsuario.getText());
-                usuario.setEmail(modificarUsuarioView.textEmailUsuario.getText());
-                usuario.setTelefono(modificarUsuarioView.textTelefonoUsuario.getText());
-                usuarioDAO.modificarUsuario(usuario);
-                modificarUsuarioView.dispose();
-            }
-        });
-        modificarUsuarioView.btnVolver.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                modificarUsuarioView.dispose();
-            }
-        });
-        modificarUsuarioView.setVisible(true);
-    }
-
-    private void eliminarUsuario() {
-        try {
-            int id = Integer.parseInt(usuarioView.textCodigoEliminarUsuario.getText());
-            Usuario usuario = new Usuario();
-            usuario.setIdCliente(id);
-            usuarioDAO.eliminarUsuario(usuario);
-        } catch (NumberFormatException e) {
-            JOptionPane.showMessageDialog(usuarioView, "Debes ingresar un número válido para el ID del usuario.", "Error", JOptionPane.ERROR_MESSAGE);
+        
+        if (e.getSource() == crear.btnVolver) {
+        	vista.setVisible(true);
+        	crear.setVisible(false);
         }
-    }
+
+        //Esto permite que al oprimir el boton se guarden los datos suministrados
+        if (e.getSource() == crear.btnRegistrarUsuario) {
+            // Obtener valores de la ventana de creación
+            String nombre = crear.textNombreUsuario.getText();
+            String email = crear.textEmailUsuario.getText();
+            String telefono = crear.textTelefonoUsuario.getText();           
+            // Asignar valores al objeto libro
+            usuario.setNombre(nombre);
+            usuario.setEmail(email);
+            usuario.setTelefono(telefono);
+            // Crear el libro en el modelo
+            modelo.crearUsuario(usuario);
+
+            crear.textEmailUsuario.setText("");
+            crear.textNombreUsuario.setText("");
+            crear.textTelefonoUsuario.setText("");
+        }
+
+        //Esto permite que al oprimir el boton se abra el formulario en cuestion
+        if (e.getSource() == vista.btnModificarUsuario) {
+        	modificar.setVisible(true);
+        	vista.dispose();
+        }
+        
+        if (e.getSource() == modificar.btnVolver) {
+        	vista.setVisible(true);
+        	modificar.setVisible(false);
+        }
+        
+        	//Esto trae el contenido del libro que el usuario propocione en los campos de texto
+            if (e.getSource() == modificar.btnBuscarUsuarioID) {
+                int id = Integer.parseInt(modificar.textIdUsuario.getText());
+                usuario.setIdCliente(id);
+                modelo.traerContenidoUsuario(usuario);
+
+                // Asignar valores obtenidos al formulario de modificación
+                modificar.textIdUsuario.setText(String.valueOf(usuario.getIdCliente()));
+                modificar.textNombreUsuario.setText(usuario.getNombre());
+                modificar.textEmailUsuario.setText(usuario.getEmail());
+                modificar.textTelefonoUsuario.setText(usuario.getTelefono());
+      
+            }
+
+            //Esto guarda las modificaciones del usuario
+            if (e.getSource() == modificar.btnActualizarUsuario) {
+                // Obtener valores modificados del formulario
+                String nombre = modificar.textNombreUsuario.getText();
+                String email = modificar.textEmailUsuario.getText();
+                String telefono = modificar.textTelefonoUsuario.getText();
+                // Actualizar la base de datos en el campo id
+                usuario.setNombre(nombre);
+                usuario.setEmail(email);
+                usuario.setTelefono(telefono);
+               
+                // Guardar cambios en el modelo
+                modelo.modificarUsuario(usuario);
+
+                modificar.textNombreUsuario.setText("");
+                modificar.textTelefonoUsuario.setText("");
+                modificar.textEmailUsuario.setText("");
+            }
+        }
 }
