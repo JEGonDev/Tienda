@@ -25,7 +25,6 @@ public class UsuarioView extends JFrame {
     public JButton btnModificarUsuario;
     public DefaultTableModel model;
     public JButton btnVolverUsuarios;
-    private JButton btnNewButton;
 
     public UsuarioView() {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);

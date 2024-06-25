@@ -2,17 +2,13 @@ package controller;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import javax.swing.JOptionPane;
 import model.Producto;
 import model.ProductoDAO;
-import model.UsuarioDAO;
 import view.CrearProductoView;
-import view.CrearUsuarioView;
 import view.InicioTiendaView;
 import view.ModificarProductoView;
-import view.ModificarUsuarioView;
 import view.ProductoView;
-import view.UsuarioView;
+
 
 public class ProductoController implements ActionListener {
 
@@ -30,22 +26,29 @@ public class ProductoController implements ActionListener {
         this.modificar = modificar;
         this.modelo = modelo;
         this.inicio = inicio;
+        
+        vista.setLocationRelativeTo(null);
+		vista.setResizable(false);
+		crear.setLocationRelativeTo(null);
+		crear.setResizable(false);
+		modificar.setLocationRelativeTo(null);
+		modificar.setResizable(false);
 
         // Asignar listeners a los botones de la vista principal
-        this.vista.btnModificarCategoria.addActionListener(this);
-        this.vista.btnCrearCategoria.addActionListener(this);
-        this.vista.btnEliminarCategoria.addActionListener(this);
-        this.vista.btnMostrarCategorias.addActionListener(this);
-        this.vista.btnVolverCategorias.addActionListener(this);
+        this.vista.btnCrearProducto.addActionListener(this);
+        this.vista.btnEliminarProducto.addActionListener(this);
+        this.vista.btnModificarProducto.addActionListener(this);
+        this.vista.btnMostrarProductos.addActionListener(this);
+        this.vista.btnVolverProductos.addActionListener(this);
         
         // Asignar listeners a los botones de la vista de creación
-        this.crear.btnRegistrarCategoria.addActionListener(this);
+        this.crear.btnRegistrarProducto.addActionListener(this);
         this.crear.btnVolver.addActionListener(this);
         
         // Asignar listeners a los botones de la vista modificar
-        this.modificar.btnActualizarCategoria.addActionListener(this);
+        this.modificar.btnActualizarProducto.addActionListener(this);
         this.modificar.btnVolver.addActionListener(this);
-        this.modificar.btnBuscarIDCategoria.addActionListener(this);
+        this.modificar.btnBuscarProductoID.addActionListener(this);
     }
 
     @Override
@@ -53,26 +56,26 @@ public class ProductoController implements ActionListener {
         // Lógica de manejo de eventos
     	
     	//boton volver ventana principal
-    	if (e.getSource() == vista.btnVolverCategorias) {
+    	if (e.getSource() == vista.btnVolverProductos) {
     		inicio.setVisible(true);
     		vista.setVisible(false);
     	}
     	
     	//Esto lo que hace es mostrar la tabla en el formulario
-    	if (e.getSource() == vista.btnMostrarCategorias) {
-    	    modelo.mostrarCategorias(vista.model); // Lee y actualiza la tabla    
+    	if (e.getSource() == vista.btnMostrarProductos) {
+    	    modelo.mostrarProductos(vista.model); // Lee y actualiza la tabla    
     	}
 
     	//toma id del campo de texto y elimina segun ese id
-    	if (e.getSource() == vista.btnEliminarCategoria) {
-    	    int idCategoria = Integer.parseInt(vista.textCodigoEliminarCategoria.getText());
-    	    categoria.setIdCategoria(idCategoria);
-    	    modelo.eliminarCategoria(categoria);
-    	    vista.textCodigoEliminarCategoria.setText(""); 	        
+    	if (e.getSource() == vista.btnEliminarProducto) {
+    	    int idProducto = Integer.parseInt(vista.textCodigoEliminarProducto.getText());
+    	    producto.setIdProducto(idProducto);
+    	    modelo.eliminarProducto(producto);
+    	    vista.textCodigoEliminarProducto.setText(""); 	        
     	    } 
     	
         //Esto lo que hace es que al oprimir el boton crear libro se muestre el formulario en cuestion
-        if (e.getSource() == vista.btnCrearCategoria) {
+        if (e.getSource() == vista.btnCrearProducto) {
             crear.setVisible(true);
             vista.dispose();
         }
@@ -83,20 +86,32 @@ public class ProductoController implements ActionListener {
         }
 
         //Esto permite que al oprimir el boton se guarden los datos suministrados
-        if (e.getSource() == crear.btnRegistrarCategoria) {
+        if (e.getSource() == crear.btnRegistrarProducto) {
             // Obtener valores de la ventana de creación
-            String nombre = crear.textNombreCategoria.getText();
+            String nombre = crear.textNombreProducto.getText();
+            int idCategoria = Integer.parseInt(crear.textIdCategoria.getText());
+            String codigoBarras = crear.textCodigoBarras.getText();
+            double precioVenta = Double.parseDouble(crear.textPrecioProducto.getText());
+            int cantidadStock = Integer.parseInt(crear.textCantidadProducto.getText());
            
             // Asignar valores al objeto libro
-            categoria.setNombre(nombre);
+            producto.setNombre(nombre);
+            producto.setIdCategoria(idCategoria);
+            producto.setCodigoBarras(codigoBarras);
+            producto.setPrecioVenta(precioVenta);
+            producto.setCantidadStock(cantidadStock);
             // Crear el libro en el modelo
-            modelo.crearCategoria(categoria);
+            modelo.crearProducto(producto);
 
-            crear.textNombreCategoria.setText("");
+            crear.textCantidadProducto.setText("");
+            crear.textCodigoBarras.setText("");
+            crear.textIdCategoria.setText("");
+            crear.textNombreProducto.setText("");
+            crear.textPrecioProducto.setText("");
         }
 
         //Esto permite que al oprimir el boton se abra el formulario en cuestion
-        if (e.getSource() == vista.btnModificarCategoria) {
+        if (e.getSource() == vista.btnModificarProducto) {
         	modificar.setVisible(true);
         	vista.dispose();
         }
@@ -107,29 +122,46 @@ public class ProductoController implements ActionListener {
         }
         
         	//Esto trae el contenido del libro que el usuario propocione en los campos de texto
-            if (e.getSource() == modificar.btnBuscarIDCategoria) {
-                int id = Integer.parseInt(modificar.textCodigoCategoria.getText());
-                categoria.setIdCategoria(id);
-                modelo.traerContenidoCategoria(categoria);
+            if (e.getSource() == modificar.btnBuscarProductoID) {
+            	int idProducto = Integer.parseInt(modificar.textCodigoProducto.getText());
+                producto.setIdProducto(idProducto);
+                modelo.traerContenidoProducto(producto);
 
                 // Asignar valores obtenidos al formulario de modificación
-                modificar.textCodigoCategoria.setText(String.valueOf(categoria.getIdCategoria()));
-                modificar.textNombreCategoria.setText(categoria.getNombre());
-      
+                modificar.textCodigoProducto.setText(String.valueOf(producto.getIdProducto()));
+                modificar.textNombreProducto.setText(producto.getNombre());
+                modificar.textIdCategoria.setText(String.valueOf(producto.getIdCategoria()));
+                modificar.textCodigoBarras.setText(producto.getCodigoBarras());
+                modificar.textPrecioProducto.setText(String.valueOf(producto.getPrecioVenta()));
+                modificar.textCantidadProducto.setText(String.valueOf(producto.getCantidadStock()));
             }
 
             //Esto guarda las modificaciones del usuario
-            if (e.getSource() == modificar.btnActualizarCategoria) {
-                // Obtener valores modificados del formulario
-                String nombre = modificar.textNombreCategoria.getText();
-                    // Actualizar la base de datos en el campo id
-                categoria.setNombre(nombre);
-               
-                // Guardar cambios en el modelo
-                modelo.modificarCategoria(categoria);
+            if (e.getSource() == modificar.btnActualizarProducto) {
+            	// Obtener valores modificados del formulario
+                String nombre = modificar.textNombreProducto.getText();
+                int idCategoria = Integer.parseInt(modificar.textIdCategoria.getText().trim());
+                String codigoBarras = modificar.textCodigoBarras.getText();
+                double precioVenta = Double.parseDouble(modificar.textPrecioProducto.getText().trim());
+                int cantidadStock = Integer.parseInt(modificar.textCantidadProducto.getText().trim());
 
-                modificar.textNombreCategoria.setText("");
-                modificar.textCodigoCategoria.setText("");
+                // Actualizar la base de datos en el campo id
+                producto.setNombre(nombre);
+                producto.setIdCategoria(idCategoria);
+                producto.setCodigoBarras(codigoBarras);
+                producto.setPrecioVenta(precioVenta);
+                producto.setCantidadStock(cantidadStock);
+
+                // Guardar cambios en el modelo
+                modelo.modificarProducto(producto);
+
+                // Limpiar campos después de actualizar
+                modificar.textCodigoProducto.setText("");
+                modificar.textNombreProducto.setText("");
+                modificar.textIdCategoria.setText("");
+                modificar.textCodigoBarras.setText("");
+                modificar.textPrecioProducto.setText("");
+                modificar.textCantidadProducto.setText("");
             }
         }
 }

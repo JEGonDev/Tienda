@@ -137,6 +137,7 @@ public class UsuarioController implements ActionListener {
                 // Guardar cambios en el modelo
                 modelo.modificarUsuario(usuario);
 
+                modificar.textIdUsuario.setText("");
                 modificar.textNombreUsuario.setText("");
                 modificar.textTelefonoUsuario.setText("");
                 modificar.textEmailUsuario.setText("");

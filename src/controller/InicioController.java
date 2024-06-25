@@ -32,22 +32,20 @@ public class InicioController implements ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        if (e.getSource() == inicio.btnCategorias) {
-            mostrarVista(categoria);
-        } else if (e.getSource() == inicio.btnProductos) {
-            mostrarVista(producto);
-        } else if (e.getSource() == inicio.btnUsuarios) {
-            mostrarVista(usuario);
-        }
-    }
-
-    // Método auxiliar para mostrar una vista específica y ocultar la vista de inicio
-    private void mostrarVista(javax.swing.JFrame vista) {
-        if (vista != null) {
-            vista.setVisible(true);
-            inicio.setVisible(false);
-        } else {
-            System.err.println("La vista no está inicializada.");
-        }
+    	
+    	if (e.getSource() == inicio.btnCategorias) {
+    		categoria.setVisible(true);
+    		inicio.setVisible(false);
+    	}
+    	
+    	if (e.getSource() == inicio.btnProductos) {
+    		producto.setVisible(true);
+    		inicio.setVisible(false);
+    	}
+    	
+    	if (e.getSource() == inicio.btnUsuarios) {
+    		usuario.setVisible(true);
+    		inicio.setVisible(false);
+    	}
     }
 }

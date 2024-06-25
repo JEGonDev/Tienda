@@ -86,7 +86,7 @@ public class UsuarioDAO extends Conexion {
     public void traerContenidoUsuario(Usuario usuario) {
         try {
             this.conexion = getConnection();
-            String sql = "SELECT * FROM clientes WHERE idUsuario=?";
+            String sql = "SELECT * FROM clientes WHERE idCliente=?";
             PreparedStatement sentencia = conexion.prepareStatement(sql);
             sentencia.setInt(1, usuario.getIdCliente());
             ResultSet resultado = sentencia.executeQuery();

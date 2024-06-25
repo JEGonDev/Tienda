@@ -28,7 +28,7 @@ public class Main {
         CrearProductoView crearProductoView = new CrearProductoView();
         ModificarProductoView modificarProductoView = new ModificarProductoView();
         
-        ProductoController productoController = new ProductoController(productoView, crearProductoView, modificarProductoView, inicio);
+        ProductoController productoController = new ProductoController(productoView, crearProductoView, modificarProductoView, productoDAO, inicio);
         //
         CategoriaView categoriaView = new CategoriaView();
         CategoriaDAO categoriaDAO = new CategoriaDAO();
@@ -42,7 +42,7 @@ public class Main {
         CrearUsuarioView crearUsuarioView = new CrearUsuarioView();
         ModificarUsuarioView modificarUsuarioView = new ModificarUsuarioView();
         
-        UsuarioController usuarioController = new UsuarioController(usuarioView, usuarioDAO, crearUsuarioView, modificarUsuarioView, inicio);
+        UsuarioController usuarioController = new UsuarioController(usuarioView, crearUsuarioView, modificarUsuarioView, usuarioDAO, inicio);
         //
         InicioController inicioController = new InicioController(categoriaView, productoView, usuarioView, inicio);
         inicio.setVisible(true);
