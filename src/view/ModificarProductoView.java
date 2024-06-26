@@ -25,7 +25,7 @@ public class ModificarProductoView extends JFrame {
 
     public ModificarProductoView() {
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-        setBounds(100, 100, 450, 300);
+        setBounds(100, 100, 418, 309);
         contentPane = new JPanel();
         contentPane.setBackground(new Color(204, 255, 255));
         contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
@@ -42,16 +42,16 @@ public class ModificarProductoView extends JFrame {
         contentPane.add(lblCodigo);
 
         textCodigoProducto = new JTextField();
-        textCodigoProducto.setBounds(137, 50, 89, 20);
+        textCodigoProducto.setBounds(146, 50, 89, 20);
         contentPane.add(textCodigoProducto);
         textCodigoProducto.setColumns(10);
 
         JLabel lblNombre = new JLabel("Nombre:");
-        lblNombre.setBounds(27, 84, 45, 14);
+        lblNombre.setBounds(27, 84, 77, 14);
         contentPane.add(lblNombre);
 
         textNombreProducto = new JTextField();
-        textNombreProducto.setBounds(137, 81, 210, 20);
+        textNombreProducto.setBounds(147, 81, 210, 20);
         contentPane.add(textNombreProducto);
         textNombreProducto.setColumns(10);
 
@@ -60,7 +60,7 @@ public class ModificarProductoView extends JFrame {
         contentPane.add(lblIdCategoria);
 
         textIdCategoria = new JTextField();
-        textIdCategoria.setBounds(137, 112, 210, 20);
+        textIdCategoria.setBounds(147, 112, 210, 20);
         contentPane.add(textIdCategoria);
         textIdCategoria.setColumns(10);
 
@@ -69,7 +69,7 @@ public class ModificarProductoView extends JFrame {
         contentPane.add(lblCodigoBarras);
 
         textCodigoBarras = new JTextField();
-        textCodigoBarras.setBounds(137, 143, 210, 20);
+        textCodigoBarras.setBounds(147, 143, 210, 20);
         contentPane.add(textCodigoBarras);
         textCodigoBarras.setColumns(10);
 
@@ -78,16 +78,16 @@ public class ModificarProductoView extends JFrame {
         contentPane.add(lblPrecio);
 
         textPrecioProducto = new JTextField();
-        textPrecioProducto.setBounds(137, 174, 210, 20);
+        textPrecioProducto.setBounds(147, 174, 210, 20);
         contentPane.add(textPrecioProducto);
         textPrecioProducto.setColumns(10);
 
         JLabel lblCantidad = new JLabel("Cantidad en Stock:");
-        lblCantidad.setBounds(23, 208, 104, 14);
+        lblCantidad.setBounds(23, 208, 114, 14);
         contentPane.add(lblCantidad);
 
         textCantidadProducto = new JTextField();
-        textCantidadProducto.setBounds(137, 205, 210, 20);
+        textCantidadProducto.setBounds(147, 205, 210, 20);
         contentPane.add(textCantidadProducto);
         textCantidadProducto.setColumns(10);
 
@@ -100,7 +100,7 @@ public class ModificarProductoView extends JFrame {
         contentPane.add(btnVolver);
         
         btnBuscarProductoID = new JButton("BUSCAR");
-        btnBuscarProductoID.setBounds(294, 49, 104, 23);
+        btnBuscarProductoID.setBounds(253, 49, 104, 23);
         contentPane.add(btnBuscarProductoID);
     }
 }
